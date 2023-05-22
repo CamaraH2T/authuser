@@ -28,23 +28,18 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
-                                                   @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto){
-
+                                               @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto){
         log.debug("POST registerUser userDto received {} ", userDto.toString());
-        if(userService.existsByUserName(userDto.getUsername())){
+        if(userService.existsByUsername(userDto.getUsername())){
             log.warn("Username {} is Already Taken ", userDto.getUsername());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is already taken!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is Already Taken!");
         }
-
         if(userService.existsByEmail(userDto.getEmail())){
             log.warn("Email {} is Already Taken ", userDto.getEmail());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
         }
-
         var userModel = new UserModel();
-
         BeanUtils.copyProperties(userDto, userModel);
-
         userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.STUDENT);
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -52,8 +47,9 @@ public class AuthenticationController {
         userService.save(userModel);
         log.debug("POST registerUser userId saved {} ", userModel.getUserId());
         log.info("User saved successfully userId {} ", userModel.getUserId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }
+
     @GetMapping("/")
     public String index(){
         log.trace("TRACE");
@@ -61,7 +57,6 @@ public class AuthenticationController {
         log.info("INFO");
         log.warn("WARN");
         log.error("ERROR");
-
         return "Logging Spring Boot...";
     }
 }

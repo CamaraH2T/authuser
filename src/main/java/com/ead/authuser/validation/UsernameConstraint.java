@@ -1,9 +1,7 @@
-package com.ead.authuser.validations;
+package com.ead.authuser.validation;
 
-import com.ead.authuser.validations.impl.UsernameConstraintImpl;
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
-
+import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
